@@ -1,19 +1,42 @@
 <script setup lang="ts">
 import HelloWorld from './components/HelloWorld.vue'
 import TheWelcome from './components/TheWelcome.vue'
+import { onMounted, ref } from 'vue'
+import renderHistorySvg, { toSCMHistoryItem } from '../lib/renderHistorySvg.ts'
+import GitHistory from '@/components/GitHistory/GitHistory.vue'
+
+const models = ref()
+
+onMounted(()=>{
+   models.value = [
+    toSCMHistoryItem('a', ['b', 'c']),
+    toSCMHistoryItem('c', ['b']),
+    toSCMHistoryItem('b', ['d', 'e']),
+    toSCMHistoryItem('e', ['f']),
+    toSCMHistoryItem('f', ['g']),
+    toSCMHistoryItem('d', ['h']),
+  ]
+
+  // const svgs = renderHistorySvg({
+  //   models: models,
+  // })
+  //
+  // console.log(svgs)
+})
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <GitHistory :models="models" >
+    <template #commit="{item}">
+      <div style="line-height: 22px">
+        中文sssss
+      </div>
+    </template>
+  </GitHistory>
 
   <main>
-    <TheWelcome />
+<!--    <TheWelcome />-->
   </main>
 </template>
 

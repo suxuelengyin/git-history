@@ -1,3 +1,37 @@
+
+import cloneDeep from 'lodash.clonedeep'
+
+
+export interface ISCMHistoryItemRef {
+  readonly id: string;
+  readonly name: string;
+  readonly revision?: string;
+  readonly category?: string;
+  readonly description?: string;
+  readonly color?: string;
+}
+
+export interface ISCMHistoryItemRefsChangeEvent {
+  readonly added: readonly ISCMHistoryItemRef[];
+  readonly removed: readonly ISCMHistoryItemRef[];
+  readonly modified: readonly ISCMHistoryItemRef[];
+  readonly silent: boolean;
+}
+
+export interface ISCMHistoryItem {
+  readonly id: string;
+  readonly parentIds: string[];
+  readonly subject: string;
+  readonly message: string;
+  readonly displayId?: string;
+  readonly author?: string;
+  readonly authorEmail?: string;
+  // readonly authorIcon?: URI | { light: URI; dark: URI } | ThemeIcon;
+  readonly timestamp?: number;
+  // readonly statistics?: ISCMHistoryItemStatistics;
+  readonly references?: ISCMHistoryItemRef[];
+}
+
 export interface RenderHistoryOptions {
   size?: {
     SWIMLANE_HEIGHT?: number
@@ -6,8 +40,9 @@ export interface RenderHistoryOptions {
     CIRCLE_RADIUS?: number
     CIRCLE_STROKE_WIDTH?: number
   }
+  historyItemRefColor?: string;
   colors?: string[]
-  modes: any[]
+  models: any[]
 }
 function rot(index, modulo) {
   return (modulo + (index % modulo)) % modulo
@@ -23,6 +58,34 @@ function findLastIndex(nodes, id) {
   return -1
 }
 
+function compareHistoryItemRefs(
+  ref1: ISCMHistoryItemRef,
+  ref2: ISCMHistoryItemRef,
+  currentHistoryItemRef?: ISCMHistoryItemRef,
+  currentHistoryItemRemoteRef?: ISCMHistoryItemRef,
+  currentHistoryItemBaseRef?: ISCMHistoryItemRef
+): number {
+  const getHistoryItemRefOrder = (ref: ISCMHistoryItemRef) => {
+    if (ref.id === currentHistoryItemRef?.id) {
+      return 1;
+    } else if (ref.id === currentHistoryItemRemoteRef?.id) {
+      return 2;
+    } else if (ref.id === currentHistoryItemBaseRef?.id) {
+      return 3;
+    } else if (ref.color !== undefined) {
+      return 4;
+    }
+
+    return 99;
+  };
+
+  // Assign order (current > remote > base > color)
+  const ref1Order = getHistoryItemRefOrder(ref1);
+  const ref2Order = getHistoryItemRefOrder(ref2);
+
+  return ref1Order - ref2Order;
+}
+
 export function toSCMHistoryItem(id, parentIds, references) {
   return { id, parentIds, subject: '', message: '', references }
 }
@@ -30,7 +93,7 @@ export function toSCMHistoryItem(id, parentIds, references) {
 function renderHistorySvg(options: RenderHistoryOptions) {
   const colorRegistry = options?.colors || ['#FFB000', '#DC267F', '#994F00', '#40B0A6', '#B66DFF']
 
-  const deepClone = _.cloneDeep
+  const historyItemRefColor = options?.historyItemRefColor || '#FFB000'
 
   const SWIMLANE_HEIGHT = options?.size?.SWIMLANE_HEIGHT || 22
   const SWIMLANE_WIDTH = options?.size?.SWIMLANE_WIDTH || 11
@@ -95,7 +158,7 @@ function renderHistorySvg(options: RenderHistoryOptions) {
 
       const isCurrent = historyItem.id === currentHistoryItemRef?.revision
       const outputSwimlanesFromPreviousItem = viewModels.at(-1)?.outputSwimlanes ?? []
-      const inputSwimlanes = outputSwimlanesFromPreviousItem.map((i) => deepClone(i))
+      const inputSwimlanes = outputSwimlanesFromPreviousItem.map((i) => cloneDeep(i))
       const outputSwimlanes = []
 
       let firstParentAdded = false
@@ -115,7 +178,7 @@ function renderHistorySvg(options: RenderHistoryOptions) {
             continue
           }
 
-          outputSwimlanes.push(deepClone(node))
+          outputSwimlanes.push(cloneDeep(node))
         }
       }
 
@@ -374,11 +437,14 @@ function renderHistorySvg(options: RenderHistoryOptions) {
     return svg
   }
 
-  const res = toISCMHistoryItemViewModelArray(models)
+  const res = toISCMHistoryItemViewModelArray(options.models)
 
-  const svgs = res.map((item) => renderSCMHistoryItemGraph(item))
+  const datas = res.map((item) => ({
+    item,
+    svg: renderSCMHistoryItemGraph(item)
+  }))
 
-  return svgs
+  return datas
 }
 
 export default renderHistorySvg

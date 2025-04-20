@@ -19,9 +19,9 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'lib/index.js'),
-      name: 'renderHistorySvg',
+      name: 'git-render-history',
       // 将添加适当的扩展名后缀
-      fileName: 'renderHistorySvg',
+      fileName: 'git-render-history',
     },
     rollupOptions: {
       // 确保外部化处理那些
@@ -36,4 +36,7 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    port: 5172
+  }
 })
