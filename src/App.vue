@@ -4,6 +4,8 @@ import TheWelcome from './components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
 import renderHistorySvg, { toSCMHistoryItem } from '../lib/renderHistorySvg.ts'
 import GitHistory from '@/components/GitHistory/GitHistory.vue'
+import  {GitHistory as GitHistoryNPM} from 'git-history-render'
+import 'git-history-render/dist/git-render-history.css'
 
 const models = ref()
 
@@ -27,13 +29,13 @@ onMounted(()=>{
 </script>
 
 <template>
-  <GitHistory :models="models" >
+  <GitHistoryNPM :models="models" >
     <template #commit="{item}">
       <div style="line-height: 22px">
-        中文sssss
+        test commit
       </div>
     </template>
-  </GitHistory>
+  </GitHistoryNPM>
 
   <main>
 <!--    <TheWelcome />-->

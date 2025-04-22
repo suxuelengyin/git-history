@@ -1,9 +1,10 @@
 {
-  "name": "git-history",
+  "name": "git-history-render",
   "version": "0.1.0",
   "private": false,
   "type": "module",
   "main": "dist/git-render-history.js",
+  "repository": "https://github.com/suxuelengyin/git-history",
   "files": [
     "dist"
   ],
@@ -17,6 +18,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "git-history-render": "^0.1.0",
     "lodash.clonedeep": "^4.5.0",
     "vue": "^3.5.13"
   },

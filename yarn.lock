@@ -1500,6 +1500,14 @@ get-stream@^9.0.0:
     "@sec-ant/readable-stream" "^0.4.1"
     is-stream "^4.0.1"
 
+git-history-render@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/git-history-render/-/git-history-render-0.1.0.tgz#35b05389480c6aa2ca2cdc587c8ffcaa7192e5ec"
+  integrity sha512-wwJ7zYwDAeLPzVFeGPBBkfXodgghOQk+3fNxHk1zhaQjfe7Hx5guawGK6ax+AY6dw/s8T4ldjdf4QadR/WR2CQ==
+  dependencies:
+    lodash.clonedeep "^4.5.0"
+    vue "^3.5.13"
+
 glob-parent@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/glob-parent/-/glob-parent-5.1.2.tgz#869832c58034fe68a4093c17dc15e8340d8401c4"
