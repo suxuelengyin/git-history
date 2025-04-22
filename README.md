@@ -12,6 +12,7 @@ npm install git-history-render
 ```javascript
 
 import  {GitHistory, toSCMHistoryItem} from 'git-history-render'
+import 'git-history-render/dist/git-render-history.css'
 
 const models = ref()
 
@@ -30,13 +31,13 @@ onMounted(()=>{
 vue template: 
 ```html
 <template>
-  <GitHistoryNPM :models="models" >
+  <GitHistory :models="models" >
     <template #commit="{item}">
       <div style="line-height: 22px">
         test commit
       </div>
     </template>
-  </GitHistoryNPM>
+  </GitHistory>
 </template>
 ```
 
