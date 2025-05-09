@@ -4,19 +4,37 @@ import TheWelcome from './components/TheWelcome.vue'
 import { onMounted, ref } from 'vue'
 import renderHistorySvg, { toSCMHistoryItem } from '../lib/renderHistorySvg.ts'
 import GitHistory from '@/components/GitHistory/GitHistory.vue'
-import  {GitHistory as GitHistoryNPM} from 'git-history-render'
+import { GitHistory as GitHistoryNPM } from 'git-history-render'
 import 'git-history-render/dist/git-render-history.css'
 
 const models = ref()
 
-onMounted(()=>{
-   models.value = [
-    toSCMHistoryItem('a', ['b', 'c']),
-    toSCMHistoryItem('c', ['b']),
-    toSCMHistoryItem('b', ['d', 'e']),
-    toSCMHistoryItem('e', ['f']),
-    toSCMHistoryItem('f', ['g']),
-    toSCMHistoryItem('d', ['h']),
+onMounted(() => {
+  models.value = [
+    {
+      id: 'a',
+      subject: '111',
+      message: '1222',
+      parentIds: ['b', 'e'],
+    },
+    {
+      id: 'e',
+      subject: '111',
+      message: 'eeee',
+      parentIds: ['c'],
+    },
+    {
+      id: 'b',
+      subject: '222',
+      message: '3333',
+      parentIds: ['c'],
+    },
+    {
+      id: 'c',
+      subject: '333',
+      message: '4444',
+      parentIds: [],
+    },
   ]
 
   // const svgs = renderHistorySvg({
@@ -25,20 +43,19 @@ onMounted(()=>{
   //
   // console.log(svgs)
 })
-
 </script>
 
 <template>
-  <GitHistoryNPM :models="models" >
-    <template #commit="{item}">
+  <GitHistoryNPM :models="models">
+    <template #commit="{ item }">
       <div style="line-height: 22px">
-        test commit
+        {{ item.historyItem.message }}
       </div>
     </template>
   </GitHistoryNPM>
 
   <main>
-<!--    <TheWelcome />-->
+    <!--    <TheWelcome />-->
   </main>
 </template>
 
