@@ -1,6 +1,6 @@
 {
   "name": "git-history-render",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "type": "module",
   "main": "dist/git-render-history.js",
